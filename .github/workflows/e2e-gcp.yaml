@@ -49,7 +49,7 @@ jobs:
         uses: google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1
         id: "auth"
         with:
-          credentials_json: "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}"
+          credentials_json: "${{ secrets.FLUX2_E2E_GOOGLE_CREDENTIALS }}"
           token_format: "access_token"
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@e30db14379863a8c79331b04a9969f4c1e225e0b # v1.1.1
@@ -76,8 +76,8 @@ jobs:
           TF_VAR_gcp_region: ${{ vars.TF_VAR_gcp_region }}
           TF_VAR_gcp_zone: ${{ vars.TF_VAR_gcp_zone }}
           TF_VAR_gcp_email: ${{ secrets.TF_VAR_gcp_email }}
-          TF_VAR_gcp_keyring: ${{ vars.TF_VAR_gcp_keyring }}
-          TF_VAR_gcp_crypto_key: ${{ vars.TF_VAR_gcp_crypto_key }}
+          TF_VAR_gcp_keyring: ${{ secrets.TF_VAR_gcp_keyring }}
+          TF_VAR_gcp_crypto_key: ${{ secrets.TF_VAR_gcp_crypto_key }}
           GITREPO_SSH_CONTENTS: ${{ secrets.GITREPO_SSH_CONTENTS }}
           GITREPO_SSH_PUB_CONTENTS: ${{ secrets.GITREPO_SSH_PUB_CONTENTS }}
         run: |

@@ -130,8 +130,11 @@ for the terraform variables
 
 - GCP account with an active project to be able to create GKE and GCR, and permission to assign roles.
 - Existing GCP KMS keyring and crypto key.
-  - [Create a Keyring](https://cloud.google.com/kms/docs/create-key-ring)
-  - [Create a Crypto Key](https://cloud.google.com/kms/docs/create-key)
+  - [Create a Keyring](https://cloud.google.com/kms/docs/create-key-ring) with
+    location `global`.
+  - [Create a Crypto Key](https://cloud.google.com/kms/docs/create-key) with
+    symmetric algorithm for encryption and decryption, and software based
+    protection level.
 - gcloud CLI, need to be logged in using `gcloud auth login` as a User (not a
   Service Account), configure application default credentials with `gcloud auth
   application-default login` and docker credential helper with `gcloud auth configure-docker`.
@@ -172,6 +175,7 @@ Following roles are needed for provisioning the infrastructure and running the t
 - Compute Instance Admin (v1) - `roles/compute.instanceAdmin.v1`
 - Kubernetes Engine Admin - `roles/container.admin`
 - Service Account User - `roles/iam.serviceAccountUser`
+- Service Account Token Creator - `roles/iam.serviceAccountTokenCreator`
 - Artifact Registry Administrator - `roles/artifactregistry.admin`
 - Artifact Registry Repository Administrator - `roles/artifactregistry.repoAdmin`
 - Cloud KMS Admin - `roles/cloudkms.admin`
