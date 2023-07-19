@@ -225,11 +225,10 @@ func TestMain(m *testing.M) {
 		// Calling exit on panic prevents logging of panic error.
 		// Exit only on normal return. Explicitly detect panic and log the error
 		// on panic.
-		if err := recover(); err == nil {
-			os.Exit(exitCode)
-		} else {
+		if err := recover(); err != nil {
 			log.Printf("panic: %v", err)
 		}
+		os.Exit(exitCode)
 	}()
 
 	// get terrraform infrastructure

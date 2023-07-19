@@ -114,7 +114,7 @@ jobs:
           source .env
           mkdir -p ./build/ssh
           touch ./build/ssh/key
-          echo $GITREPO_SSH_CONTENTS | base64 -d > build/ssh/key
+          echo $GITREPO_SSH_CONTENTS | base64 -d > ./build/ssh/key
           export GITREPO_SSH_PATH=build/ssh/key
           touch ./build/ssh/key.pub
           echo $GITREPO_SSH_PUB_CONTENTS | base64 -d > ./build/ssh/key.pub

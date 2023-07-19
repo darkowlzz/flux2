@@ -55,21 +55,31 @@ the tests:
 - `Microsoft.KeyVault/*`
 - `Microsoft.EventHub/*`
 
-To set up CI secrets and variables using
+### IAM and CI setup
+
+To create the necessary IAM role with all the permissions, set up CI secrets and variables using
 [azure-gh-actions](https://github.com/fluxcd/test-infra/tree/main/tf-modules/azure/github-actions)
 use:
 
 ```hcl
+resource "tls_private_key" "privatekey" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
 module "azure_gh_actions" {
   source = "git::https://github.com/fluxcd/test-infra.git//tf-modules/azure/github-actions"
 
   azure_owners = ["owner-id-1", "owner-id-2"]
   azure_app_name = "flux2-e2e"
   azure_app_description = "flux2 e2e"
+  azure_app_secret_name = "flux2-e2e"
   azure_permissions = [
       "Microsoft.Kubernetes/*",
       "Microsoft.Resources/*",
-      "Microsoft.Authorization/roleAssignments/{Read,Write,Delete}",
+      "Microsoft.Authorization/roleAssignments/Read",
+      "Microsoft.Authorization/roleAssignments/Write",
+      "Microsoft.Authorization/roleAssignments/Delete",
       "Microsoft.ContainerRegistry/*",
       "Microsoft.ContainerService/*",
       "Microsoft.KeyVault/*",
@@ -87,11 +97,19 @@ module "azure_gh_actions" {
   github_secret_custom = {
     "TF_VAR_azuredevops_org" = "<org-name>",
     "TF_VAR_azuredevops_pat" = "<pat>",
-    "GITREPO_SSH_CONTENTS" = "<add-private-key-content>",
-    "GITREPO_SSH_PUB_CONTENTS" = "<add-public-key-content>"
+    "GITREPO_SSH_CONTENTS"     = base64encode(tls_private_key.privatekey.private_key_openssh),
+    "GITREPO_SSH_PUB_CONTENTS" = base64encode(tls_private_key.privatekey.public_key_openssh)
   }
 }
+
+output "publickey" {
+  value = tls_private_key.privatekey.public_key_openssh
+}
 ```
+
+Copy the `publickey` output printed after applying, or run `terraform output` to
+print it again, and add it in the Azure DevOps SSH public keys under the user
+account that'll be used by flux in the tests.
 
 ## GCP
 
