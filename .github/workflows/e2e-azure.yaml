@@ -2,68 +2,68 @@ name: e2e-azure
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 6 * * *"
-  push:
-    branches:
-      - main
-    paths:
-      - "tests/**"
-      - ".github/workflows/e2e-azure.yaml"
-  pull_request:
-    branches:
-      - main
-    paths:
-      - "tests/**"
-      - ".github/workflows/e2e-azure.yaml"
+  # schedule:
+  #   - cron: "0 6 * * *"
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - "tests/**"
+  #     - ".github/workflows/e2e-azure.yaml"
+  # pull_request:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - "tests/**"
+  #     - ".github/workflows/e2e-azure.yaml"
 
 permissions:
   contents: read
 
 jobs:
-  e2e-amd64-aks:
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: ./tests/azure
-    if: (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && github.actor != 'dependabot[bot]'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
-      - name: Setup Go
-        uses: actions/setup-go@fac708d6674e30b6ba41289acaab6d4b75aa0753 # v4.0.1
-        with:
-          go-version: 1.20.x
-          cache-dependency-path: tests/azure/go.sum
-      - name: Setup Flux CLI
-        run: |
-          make build
-          mkdir -p $HOME/.local/bin
-          mv ./bin/flux $HOME/.local/bin
-        working-directory: ./
-      - name: Setup SOPS
-        run: |
-          mkdir -p $HOME/.local/bin
-          wget https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.linux -O $HOME/.local/bin/sops
-          chmod +x $HOME/.local/bin/sops
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@633666f66e0061ca3b725c73b2ec20cd13a8fdd1 # v2
-        with:
-          terraform_version: 1.2.8
-          terraform_wrapper: false
-      - name: Setup Azure CLI
-        run: |
-          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-      - name: Run Azure e2e tests
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-        run: |
-          ls $HOME/.local/bin
-          az login --service-principal -u ${ARM_CLIENT_ID} -p ${ARM_CLIENT_SECRET} -t ${ARM_TENANT_ID}
-          go test -v -coverprofile cover.out -timeout 60m .
+  # e2e-amd64-aks:
+  #   runs-on: ubuntu-22.04
+  #   defaults:
+  #     run:
+  #       working-directory: ./tests/azure
+  #   if: (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && github.actor != 'dependabot[bot]'
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
+  #     - name: Setup Go
+  #       uses: actions/setup-go@fac708d6674e30b6ba41289acaab6d4b75aa0753 # v4.0.1
+  #       with:
+  #         go-version: 1.20.x
+  #         cache-dependency-path: tests/azure/go.sum
+  #     - name: Setup Flux CLI
+  #       run: |
+  #         make build
+  #         mkdir -p $HOME/.local/bin
+  #         mv ./bin/flux $HOME/.local/bin
+  #       working-directory: ./
+  #     - name: Setup SOPS
+  #       run: |
+  #         mkdir -p $HOME/.local/bin
+  #         wget https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.linux -O $HOME/.local/bin/sops
+  #         chmod +x $HOME/.local/bin/sops
+  #     - name: Setup Terraform
+  #       uses: hashicorp/setup-terraform@633666f66e0061ca3b725c73b2ec20cd13a8fdd1 # v2
+  #       with:
+  #         terraform_version: 1.2.8
+  #         terraform_wrapper: false
+  #     - name: Setup Azure CLI
+  #       run: |
+  #         curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+  #     - name: Run Azure e2e tests
+  #       env:
+  #         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+  #         ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+  #         ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+  #         ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+  #       run: |
+  #         ls $HOME/.local/bin
+  #         az login --service-principal -u ${ARM_CLIENT_ID} -p ${ARM_CLIENT_SECRET} -t ${ARM_TENANT_ID}
+  #         go test -v -coverprofile cover.out -timeout 60m .
 
   refactored-e2e-amd64-aks:
     runs-on: ubuntu-22.04

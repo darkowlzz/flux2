@@ -2,20 +2,20 @@ name: e2e-gcp
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 6 * * *"
-  push:
-    branches:
-      - main
-    paths:
-      - "tests/**"
-      - ".github/workflows/e2e-gcp.yaml"
-  pull_request:
-    branches:
-      - main
-    paths:
-      - "tests/**"
-      - ".github/workflows/e2e-gcp.yaml"
+  # schedule:
+  #   - cron: "0 6 * * *"
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - "tests/**"
+  #     - ".github/workflows/e2e-gcp.yaml"
+  # pull_request:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - "tests/**"
+  #     - ".github/workflows/e2e-gcp.yaml"
 
 permissions:
   contents: read
